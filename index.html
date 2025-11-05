@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorized Workshop - Service Billing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header-section">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between py-3">
+                <div class="logo-container">
+                    <img src="logo.png" alt="Company Logo" class="logo">
+                    <span class="company-name ms-3">Authorized Workshop</span>
+                </div>
+                <div class="header-contact">
+                    <small class="text-white">Service Billing Portal</small>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showSection('dashboard', this); return false;">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('invoices', this); return false;">Invoices</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('add-invoice', this); return false;">Add Invoice</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showSection('contact', this); return false;">Contact / About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title">Dashboard</h2>
+                    <p class="text-muted">Service Billing Overview</p>
+                </div>
+            </div>
+
+            <div class="row g-4 mt-3">
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="card-body text-center">
+                            <h3 class="stat-number" id="totalInvoices">0</h3>
+                            <p class="stat-label">Total Invoices</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="card-body text-center">
+                            <h3 class="stat-number" id="thisMonth">0</h3>
+                            <p class="stat-label">This Month</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="card-body text-center">
+                            <h3 class="stat-number" id="totalRevenue">₹0</h3>
+                            <p class="stat-label">Total Revenue</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card">
+                        <div class="card-body text-center">
+                            <h3 class="stat-number" id="avgInvoice">₹0</h3>
+                            <p class="stat-label">Avg. Invoice</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h4>Recent Invoices</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="recentInvoicesList" class="table-responsive">
+                                <p class="text-center text-muted py-4">No invoices uploaded yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invoices Section -->
+        <section id="invoices" class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title">All Invoices</h2>
+                    <p class="text-muted">View and manage all service invoices</p>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="searchInvoice" placeholder="Search by invoice number, customer name, or vehicle number...">
+                            </div>
+                            <div id="invoicesList" class="table-responsive">
+                                <p class="text-center text-muted py-4">No invoices available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Invoice Section -->
+        <section id="add-invoice" class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title">Create New Invoice</h2>
+                    <p class="text-muted">Admin - Fill in complete billing details</p>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form id="invoiceUploadForm">
+
+                                <!-- Invoice Details -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">Invoice Details</h4>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="invoiceNumber" class="form-label">Invoice Number *</label>
+                                            <input type="text" class="form-control" id="invoiceNumber" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="invoiceDate" class="form-label">Invoice Date *</label>
+                                            <input type="datetime-local" class="form-control" id="invoiceDate" required>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="partInvoiceNumber" class="form-label">Part Invoice Number</label>
+                                            <input type="text" class="form-control" id="partInvoiceNumber">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="laborInvoiceNumber" class="form-label">Labor Invoice Number</label>
+                                            <input type="text" class="form-control" id="laborInvoiceNumber">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="repairOrderNumber" class="form-label">Repair Order Number</label>
+                                            <input type="text" class="form-control" id="repairOrderNumber">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="repairOrderDate" class="form-label">Repair Order Date</label>
+                                            <input type="datetime-local" class="form-control" id="repairOrderDate">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Customer Details -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">Customer Details</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="customerName" class="form-label">Customer Name *</label>
+                                            <input type="text" class="form-control" id="customerName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="customerContact" class="form-label">Contact Number</label>
+                                            <input type="text" class="form-control" id="customerContact">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="customerAddress" class="form-label">Address</label>
+                                            <input type="text" class="form-control" id="customerAddress">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="customerCity" class="form-label">City</label>
+                                            <input type="text" class="form-control" id="customerCity">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="customerState" class="form-label">State</label>
+                                            <input type="text" class="form-control" id="customerState" value="TAMIL NADU">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="customerPinCode" class="form-label">Pin Code</label>
+                                            <input type="text" class="form-control" id="customerPinCode">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="customerGSTIN" class="form-label">GSTIN (Optional)</label>
+                                            <input type="text" class="form-control" id="customerGSTIN">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Vehicle Details -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">Vehicle Details</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vehicleNumber" class="form-label">Registration Number *</label>
+                                            <input type="text" class="form-control" id="vehicleNumber" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="vehicleModel" class="form-label">Model Name / Trim</label>
+                                            <input type="text" class="form-control" id="vehicleModel">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="vehicleFuelType" class="form-label">Fuel Type</label>
+                                            <select class="form-control" id="vehicleFuelType">
+                                                <option value="">Select</option>
+                                                <option value="Petrol">Petrol</option>
+                                                <option value="Diesel">Diesel</option>
+                                                <option value="Electric">Electric</option>
+                                                <option value="Hybrid">Hybrid</option>
+                                                <option value="CNG">CNG</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="vehicleChassisNo" class="form-label">Chassis Number</label>
+                                            <input type="text" class="form-control" id="vehicleChassisNo">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="vehicleKilometers" class="form-label">Kilometers</label>
+                                            <input type="number" class="form-control" id="vehicleKilometers" step="0.1">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Service Details -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">Service Details</h4>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="serviceAdvisor" class="form-label">Service Advisor</label>
+                                            <input type="text" class="form-control" id="serviceAdvisor">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="serviceAdvisorNumber" class="form-label">Advisor Number</label>
+                                            <input type="text" class="form-control" id="serviceAdvisorNumber">
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="placeOfSupply" class="form-label">Place of Supply</label>
+                                            <input type="text" class="form-control" id="placeOfSupply">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Parts Section -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">
+                                        Parts
+                                        <button type="button" class="btn btn-sm btn-success float-end" onclick="addPartRow()">+ Add Part</button>
+                                    </h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="partsTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 15%;">Part Code</th>
+                                                    <th style="width: 25%;">Description</th>
+                                                    <th style="width: 10%;">HSN/SAC</th>
+                                                    <th style="width: 8%;">Tax%</th>
+                                                    <th style="width: 8%;">Qty</th>
+                                                    <th style="width: 12%;">Rate</th>
+                                                    <th style="width: 10%;">Discount</th>
+                                                    <th style="width: 10%;">Amount</th>
+                                                    <th style="width: 2%;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="partsTableBody">
+                                                <!-- Parts rows will be added dynamically -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Labor Section -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">
+                                        Labour and Services
+                                        <button type="button" class="btn btn-sm btn-success float-end" onclick="addLaborRow()">+ Add Labor</button>
+                                    </h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="laborTable">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th style="width: 15%;">OP Code</th>
+                                                    <th style="width: 25%;">Description</th>
+                                                    <th style="width: 10%;">HSN/SAC</th>
+                                                    <th style="width: 8%;">Tax%</th>
+                                                    <th style="width: 8%;">Qty</th>
+                                                    <th style="width: 12%;">Rate</th>
+                                                    <th style="width: 10%;">Discount</th>
+                                                    <th style="width: 10%;">Amount</th>
+                                                    <th style="width: 2%;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="laborTableBody">
+                                                <!-- Labor rows will be added dynamically -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Additional Info -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">Additional Information</h4>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="observations" class="form-label">Observations</label>
+                                            <textarea class="form-control" id="observations" rows="2"></textarea>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="deferredJobs" class="form-label">Deferred Jobs</label>
+                                            <textarea class="form-control" id="deferredJobs" rows="2"></textarea>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="repairOrderType" class="form-label">Repair Order Type</label>
+                                            <select class="form-control" id="repairOrderType">
+                                                <option value="">Select</option>
+                                                <option value="Paid Service">Paid Service</option>
+                                                <option value="Free Service">Free Service</option>
+                                                <option value="Warranty">Warranty</option>
+                                                <option value="Recall">Recall</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Summary (Auto-calculated) -->
+                                <div class="form-section">
+                                    <h4 class="form-section-title">Summary (Auto-calculated)</h4>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="summary-display">
+                                                <h5>Parts</h5>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Sub Total:</span>
+                                                    <strong id="partSubTotal">₹0.00</strong>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>CGST @ 9%:</span>
+                                                    <strong id="partCGST">₹0.00</strong>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>SGST @ 9%:</span>
+                                                    <strong id="partSGST">₹0.00</strong>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Total:</span>
+                                                    <strong id="partTotal">₹0.00</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="summary-display">
+                                                <h5>Labor</h5>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Sub Total:</span>
+                                                    <strong id="laborSubTotal">₹0.00</strong>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>CGST @ 9%:</span>
+                                                    <strong id="laborCGST">₹0.00</strong>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>SGST @ 9%:</span>
+                                                    <strong id="laborSGST">₹0.00</strong>
+                                                </div>
+                                                <div class="d-flex justify-content-between mb-2">
+                                                    <span>Total:</span>
+                                                    <strong id="laborTotal">₹0.00</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <div class="grand-total-display">
+                                                <h4 class="d-flex justify-content-between">
+                                                    <span>Grand Total (Rounded):</span>
+                                                    <strong id="grandTotal">₹0</strong>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg">Create Invoice</button>
+                                </div>
+                            </form>
+                            <div id="uploadMessage" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact/About Section -->
+        <section id="contact" class="content-section">
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="section-title">Contact / About</h2>
+                    <p class="text-muted">Company Information</p>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">About Us</h4>
+                            <p class="card-text">
+                                We are an authorized workshop providing premium automotive service and maintenance.
+                                Our team of certified technicians ensures your vehicle receives the highest quality care
+                                using genuine parts and advanced diagnostic equipment.
+                            </p>
+                            <hr>
+                            <h5>Our Services</h5>
+                            <ul>
+                                <li>Periodic Maintenance Service</li>
+                                <li>Engine Diagnostics & Repair</li>
+                                <li>Brake System Service</li>
+                                <li>AC Service & Disinfection</li>
+                                <li>Genuine Parts & Accessories</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Contact Information</h4>
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <strong>Workshop Name:</strong>
+                                    <p>SS AUTOMART PRIVATE LIMITED</p>
+                                </div>
+                                <div class="contact-item">
+                                    <strong>Address:</strong>
+                                    <p>Opp to Vivekananda Sevalayam, S.F No: 501/1<br>
+                                    Tirupur, Tamil Nadu - 641652</p>
+                                </div>
+                                <div class="contact-item">
+                                    <strong>Phone:</strong>
+                                    <p>7867044430</p>
+                                </div>
+                                <div class="contact-item">
+                                    <strong>Email:</strong>
+                                    <p>gm.service@ssauto.co.in</p>
+                                </div>
+                                <div class="contact-item">
+                                    <strong>GSTIN:</strong>
+                                    <p>33AATCS5542D1Z9</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Invoice Detail Modal -->
+        <div class="modal fade" id="invoiceDetailModal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Invoice Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" id="invoiceDetailContent">
+                        <!-- Invoice details will be loaded here -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="printInvoice()">Print</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="mb-0">&copy; 2025 SS AUTOMART PRIVATE LIMITED - All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="invoice-form.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
